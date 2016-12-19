@@ -1,0 +1,12 @@
+{
+    "main":                                 {
+                                                "layout": "layout-main",
+                                                "navbar-left": "navbar-main-left",
+                                                "navbar-right": "navbar-main-right",
+                                                "container": "container-simple"
+                                            },
+
+    "main/home":                            { "main": "screens-home" },
+
+    "main/about":                           { "main": "screens-about" }
+}

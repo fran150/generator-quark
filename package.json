@@ -9,7 +9,7 @@
     "url": "https://github.com/fran150/generator-quark"
   },
   "author": {
-    "name": "Steven Sanderson",
+    "name": "Francisco López",
     "url": "https://github.com/fran150"
   },
   "engines": {
@@ -23,8 +23,10 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "yeoman-generator": "~0.16.0",
-    "chalk": "~0.4.0"
+    "chalk": "~1.1.3",
+    "slugify": "^1.0.2",
+    "yeoman-generator": "~1.0.0",
+    "yeoman-welcome": "^1.0.1"
   },
   "devDependencies": {
     "mocha": "*"

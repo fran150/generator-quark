@@ -1,16 +1,24 @@
-define(['jquery', 'knockout', './router', 'bootstrap', 'knockout-projections'], function($, ko, router) {
+define([
+    'quark',
+    'json!./config/components/components.config.json',
+    'json!./config/components/screens.config.json',
+    'json!./config/routing/pages.config.json',
+    'json!./config/routing/params.config.json',
+    'json!./config/routing/routes.config.json',
+    'bootstrap/js',
+    'loadCss!bootstrap/css',
+    'loadCss!font-awesome/css',
+    'qk-alchemy/main'
+], function($$, components, screens, pages, params, routes) {
+    // Register all components and screens
+    $$.registerComponents(components);
+    $$.registerComponents(screens);
 
-  // Components can be packaged as AMD modules, such as the following:
-  ko.components.register('nav-bar', { require: 'components/nav-bar/nav-bar' });
-  ko.components.register('home-page', { require: 'components/home-page/home' });
+    // Configure the routing system
+    $$.routing.pages(pages, params);
+    $$.routing.mapRoute(routes);
 
-  // ... or for template-only components, you can just point to a .html file directly:
-  ko.components.register('about-page', {
-    template: { require: 'text!components/about-page/about.html' }
-  });
-
-  // [Scaffolded component registrations will be inserted here. To retain this feature, don't remove this comment.]
-
-  // Start the application
-  ko.applyBindings({ route: router.currentRoute });
+    // Start Quark Application
+    $$.routing.activateHasher();
+    $$.start();
 });

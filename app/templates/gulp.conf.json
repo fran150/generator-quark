@@ -1,0 +1,24 @@
+{
+    "uglify": true,
+    "include": [
+        "screens/_layout/main.screen",
+        "screens/_navbar/main/left.screen",
+        "screens/_navbar/main/right.screen",
+        "screens/_sidebar/main.screen",
+        "screens/_container/simple.screen",
+        "screens/_container/sidebar.screen",
+        "screens/home.screen",
+        "screens/about.screen",
+        "controllers/main.controller",
+        "controllers/main/home.controller",
+        "controllers/main/about.controller"
+    ],
+    "bundles": {
+    },
+    "externals": [
+        "qk-alchemy"
+    ],
+    "copy": [
+        "src/bower_modules/qk-alchemy/dist/**/*"
+    ]
+}

@@ -1,17 +1,23 @@
-// require.js looks for the following global when initializing
-var require = {
-    baseUrl: ".",
+
+require = requireConfigure(QuarkRequireConf('bower_modules', false));
+require = requireConfigure(require, {
     paths: {
-        "bootstrap":            "bower_modules/components-bootstrap/js/bootstrap.min",
-        "crossroads":           "bower_modules/crossroads/dist/crossroads.min",
-        "hasher":               "bower_modules/hasher/dist/js/hasher.min",
-        "jquery":               "bower_modules/jquery/dist/jquery",
-        "knockout":             "bower_modules/knockout/dist/knockout",
-        "knockout-projections": "bower_modules/knockout-projections/dist/knockout-projections",
-        "signals":              "bower_modules/js-signals/dist/signals.min",
-        "text":                 "bower_modules/requirejs-text/text"
+        'config':                       'app/config',
+        'services':                     'services',
+        'bootstrap/js':                 'bower_modules/bootstrap/dist/js/bootstrap.min',
+        'bootstrap/css':                'bower_modules/bootstrap/dist/css/bootstrap.min',
+        'bootstrap-switch/js':          'bower_modules/bootstrap-switch/dist/js/bootstrap-switch.min',
+        'bootstrap-switch/bt3/css':     'bower_modules/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min',
+        'font-awesome/css':             'bower_modules/font-awesome/css/font-awesome.min',
+        'qk-alchemy':                   'bower_modules/qk-alchemy/dist',
+        'json':                         'bower_modules/requirejs-plugins/src/json'
     },
     shim: {
-        "bootstrap": { deps: ["jquery"] }
+        "bootstrap/js": {
+            "deps": ['jquery']
+        },
+        "bootstrap-switch/js": {
+            "deps": ['boostrap']
+        }
     }
-};
+});

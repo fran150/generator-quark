@@ -1,0 +1,11 @@
+<al-layout data-bind="import: 'layout'">
+    <!-- ko if: main.withNavbar -->
+        <al-layout-navbar data-bind="import: 'navbar'"></al-layout-navbar>
+    <!-- /ko -->
+
+    <!-- ko if: main.withSidebar -->
+        <al-layout-sidebar data-bind="import: 'sidebar'"></al-layout-sidebar>
+    <!-- /ko -->
+
+    <al-layout-container data-bind="import: 'container'"></al-layout-container>
+</al-layout>

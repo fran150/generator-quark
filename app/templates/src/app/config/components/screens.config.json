@@ -1,0 +1,22 @@
+{
+    "layout": {
+        "main": "screens/_layout/main.screen"
+    },
+    "navbar": {
+        "main": {
+            "left": "screens/_navbar/main/left.screen",
+            "right": "screens/_navbar/main/right.screen"
+        }
+    },
+    "sidebar": {
+        "main": "screens/_sidebar/main.screen"
+    },
+    "container": {
+        "simple": "screens/_container/simple.screen",
+        "sidebar": "screens/_container/sidebar.screen"
+    },
+    "screens": {
+        "home": "screens/home.screen",
+        "about": "screens/about.screen"
+    }
+}

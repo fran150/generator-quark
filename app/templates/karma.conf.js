@@ -2,30 +2,31 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
-
+    basePath: '.',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine', 'requirejs'],
 
-
     // list of files / patterns to load in the browser
     files: [
-      'src/app/require.config.js',
-      'test/require.config.js',
-      'test/SpecRunner.karma.js',
-      { pattern: 'src/**/*.js', included: false },
-      { pattern: 'src/**/*.html', included: false },
-      { pattern: 'test/**/*.js', included: false }
+      { pattern: 'bower_modules/**/*.css', included: false },
+      { pattern: 'bower_modules/**/*.js', included: false },
+      { pattern: 'dist/**/*.css', included: false },
+      { pattern: 'dist/**/*.js', included: false },
+      { pattern: 'dist/**/*.html', included: false },
+      { pattern: 'tests/**/*.js', included: false },
+      { pattern: 'tests/**/*.html', included: false },
+      'bower_modules/quark/dist/require.configurator.js',
+      'bower_modules/quark/dist/quark.require.conf.js',
+      'tests/app/require.config.js',
+      'tests/karma.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-
     ],
-
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
@@ -59,7 +60,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'IE'],
 
 
     // Continuous Integration mode
