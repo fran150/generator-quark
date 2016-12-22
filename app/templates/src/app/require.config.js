@@ -2,8 +2,8 @@
 require = requireConfigure(QuarkRequireConf('bower_modules', false));
 require = requireConfigure(require, {
     paths: {
-        'config':                       'app/config',
-        'services':                     'services',
+        'app/config':                   'app/config',
+        'app/services':                 'services',
         'bootstrap/js':                 'bower_modules/bootstrap/dist/js/bootstrap.min',
         'bootstrap/css':                'bower_modules/bootstrap/dist/css/bootstrap.min',
         'bootstrap-switch/js':          'bower_modules/bootstrap-switch/dist/js/bootstrap-switch.min',
@@ -17,7 +17,7 @@ require = requireConfigure(require, {
             "deps": ['jquery']
         },
         "bootstrap-switch/js": {
-            "deps": ['boostrap']
+            "deps": ['bootstrap/js']
         }
     }
 });

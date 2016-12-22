@@ -7,13 +7,13 @@ for (var file in window.__karma__.files) {
     }
 }
 
-requirejs.config({
-    baseUrl: '/base',
-    deps: tests,
-    callback: function() {
-        require(['quark', 'qk-alchemy/main'], function($$) {
-            $$.start();
-            window.__karma__.start();
-        });
-    }
-});
+requireConfig.baseUrl = '/base';
+requireConfig.deps = tests;
+requireConfig.callback = function() {
+    require(['quark', 'qk-alchemy/main'], function($$) {
+        $$.start();
+        window.__karma__.start();
+    });
+}
+
+requirejs.config(requireConfig);

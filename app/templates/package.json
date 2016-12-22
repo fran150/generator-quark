@@ -25,7 +25,7 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
-    "karma-requireglobal-preprocessor": "0.0.0",
+    "karma-requireglobalquark-preprocessor": "0.0.0",
     "karma-requirejs": "^1.1.0",
     "requirejs": "^2.3.2"
   }
