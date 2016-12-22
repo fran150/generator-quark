@@ -4,7 +4,6 @@
         "screens/_layout/main.screen",
         "screens/_navbar/main/left.screen",
         "screens/_navbar/main/right.screen",
-        "screens/_sidebar/main.screen",
         "screens/_container/simple.screen",
         "screens/_container/sidebar.screen",
         "screens/home.screen",

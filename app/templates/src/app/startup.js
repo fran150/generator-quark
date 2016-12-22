@@ -1,4 +1,5 @@
 define([
+    'knockout',
     'quark',
     'json!./config/components/components.config.json',
     'json!./config/components/screens.config.json',
@@ -9,7 +10,7 @@ define([
     'loadCss!bootstrap/css',
     'loadCss!font-awesome/css',
     'qk-alchemy/main'
-], function($$, components, screens, pages, params, routes) {
+], function(ko, $$, components, screens, pages, params, routes) {
     // Register all components and screens
     $$.registerComponents(components);
     $$.registerComponents(screens);
