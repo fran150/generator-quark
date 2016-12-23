@@ -1,57 +1,43 @@
 <quark-component>
-    <h1 class="title well text-center">
-        <p><%= name %></p>
+    <h1>About <%= name %> application</h1>
+    <div class="well pull-right">
         <p>
-            <small>
-                Aplicaciones web con componentes usando
-                <a href="http://knockoutjs.com/">Knockout.js</a>
-            </small>
+            <strong>License:</strong> <%= license %>
         </p>
-    </h1>
-    <div class="features row">
-        <div class="col-sm-4">
-            <p class="text-center">
-                <i class="fa fa-cube"></i>
-            </p>
-            <p class="text-center lead">
-                Componentes Web
-            </p>
-            <p class="text-justified">
-                Construye componentes web que podrás utilizar cuantas
-                veces quieras para lo que necesites. Luego puedes agruparlos
-                en modulos para compartirlos entre todos tus proyectos o
-                publicarlos en internet.
-            </p>
-        </div>
-        <div class="col-sm-4">
-            <p class="text-center">
-                <i class="fa fa-cubes"></i>
-            </p>
-            <p class="text-center lead">
-                Contrucción Progresiva
-            </p>
-            <p class="text-justified">
-                Crea componentes cada vez mas especificos y hazlos
-                interactuar entre si para ir contruyendo tu aplicación web
-                paso a paso.
-            </p>
-        </div>
-        <div class="col-sm-4">
-            <p class="text-center">
-                <i class="fa fa-industry"></i>
-            </p>
-            <p class="text-center lead">
-                Buenos Cimientos
-            </p>
-            <p class="text-justified">
-                Quark.js se basa e integra frameworks existentes y bien probados como
-                <a href="http://knockoutjs.com/">Knockout</a>,
-                <a href="https://jquery.com/">JQuery</a>,
-                <a href="http://requirejs.org/">RequireJs</a>,
-                <a href="https://millermedeiros.github.io/crossroads.js/">Crossroads</a> y
-                <a href="https://github.com/millermedeiros/hasher/">Hasher</a>
-                que resuelven distintos aspectos de la aplicación.
-            </p>
-        </div>
+        <p>
+            <strong>Keywords:</strong>
+            <span class="label label-primary">
+                Quark
+            </span>
+<%
+    for (var i = 0; i < keywords.length; i++) {
+        var keyword = keywords[i];
+%>
+            &nbsp;
+            <span class="label label-primary">
+                <%= keyword %>
+            </span>
+<% } %>
+        </p>
+        <p>
+            <strong>Authors:</strong>
+            <ul>
+<%
+    for (var i = 0; i < authors.length; i++) {
+        var author = authors[i];
+%>
+                <li>
+                    <%= author %>
+                </li>
+<% } %>
+            </ul>
+        </p>
+        <p>
+            <strong>Homepage:</strong>
+            <a href="<%- homepage %>"><%= homepage %></a>
+        </p>
     </div>
+    <p>
+        Application developed with Quark.js.
+    </p>
 </quark-component>

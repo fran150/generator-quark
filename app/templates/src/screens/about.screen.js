@@ -1,7 +1,7 @@
 define([
     'quark',
     'knockout',
-    'text!./home.screen.html'
+    'text!./about.screen.html'
 ], function($$, ko, template) {
 
     function HomeScreen(params, $scope, $imports) {
