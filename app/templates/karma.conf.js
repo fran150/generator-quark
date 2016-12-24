@@ -12,6 +12,8 @@ module.exports = function(config) {
     files: [
       { pattern: 'src/**/*.css', included: false },
       { pattern: 'src/**/*.js', included: false },
+      { pattern: 'src/**/*.html', included: false },
+      { pattern: 'src/**/*.json', included: false },
       { pattern: 'tests/**/*.js', included: false },
       { pattern: 'tests/**/*.html', included: false },
       'src/bower_modules/quark/dist/require.configurator.js',
@@ -60,7 +62,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'IE'],
 
 
     // Continuous Integration mode

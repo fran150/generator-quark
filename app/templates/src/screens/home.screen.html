@@ -1,7 +1,4 @@
 <quark-component>
-    <h1>Welcome to <%= name %> application</h1>
-    <hr />
-    <p>
-        <%= description %>
-    </p>
+    <h1 data-bind="text: model.name"></h1>
+    <p data-bind="text: model.description"></p>
 </quark-component>

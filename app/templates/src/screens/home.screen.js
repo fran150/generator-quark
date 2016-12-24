@@ -6,6 +6,9 @@ define([
 
     function HomeScreen(params, $scope, $imports) {
         var self = this;
+
+        this.name = "Welcome to <%- name %> application";
+        this.description = "<%- description %>";
     }
 
     return $$.component(HomeScreen, template);
