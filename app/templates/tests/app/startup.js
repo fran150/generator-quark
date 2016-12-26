@@ -5,16 +5,12 @@ define([
     'app/startup'
 ], function($$) {
 
-    // Reference your test modules here
+    require(['json!../tests/app/config/specs.config.json'], function(testModules) {
+        // After the 'jasmine-boot' module creates the Jasmine environment, load all test modules then run them
+        var modulesCorrectedPaths = testModules.map(function(m) { return '../tests/specs/' + m; });
 
-    // After the 'jasmine-boot' module creates the Jasmine environment, load all test modules then run them
-    var testModules = [
-        'home.screen.test'
-    ];
-
-    var modulesCorrectedPaths = testModules.map(function(m) { return '../tests/specs/' + m; });
-
-    require(modulesCorrectedPaths, function() {
-        window.onload();
+        require(modulesCorrectedPaths, function() {
+            window.onload();
+        });
     });
 });

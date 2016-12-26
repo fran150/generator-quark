@@ -7,7 +7,7 @@ define([
     function <%- className %>(params, $scope, $imports) {
         var self = this;
 
-        $scope.message = "This is a <%= tag %> component";
+        this.message = "This is a <%= tag %> component";
     }
 
     return $$.component(<%- className %>, template);
