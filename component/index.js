@@ -10,7 +10,15 @@ var pascalCase = require('pascal-case');
 var QuarkAppGenerator = class extends Generator {
 
     initializing() {
-        this.log(chalk.magenta('You\'re using the fantastic Quark app generator.'));
+        this.log(chalk.yellow("   ____                   _      _            "));
+        this.log(chalk.yellow("  / __ \\                 | |    (_)          "));
+        this.log(chalk.yellow(" | |  | |_   _  __ _ _ __| | __  _ ___        "));
+        this.log(chalk.yellow(" | |  | | | | |/ _` | '__| |/ / | / __|       "));
+        this.log(chalk.yellow(" | |__| | |_| | (_| | |  |   < _| \\__ \\     "));
+        this.log(chalk.yellow("  \\___\\_\\\\__,_|\\__,_|_|  |_|\\_(_) |___/ "));
+        this.log(chalk.yellow("                               _/ |           "));
+        this.log(chalk.yellow("                               |__/           "));
+        this.log(chalk.magenta('You\'re using the fantastic Quark COMPONENT generator!!!'));
 
         this.argument('tag', {
             required: true,
@@ -25,8 +33,16 @@ var QuarkAppGenerator = class extends Generator {
             default: false
         });
 
+        this.option('nobuild', {
+            required: false,
+            type: Boolean,
+            desc: 'Must include the component on built files',
+            default: false
+        });
+
         this.tag = this.options['tag'];
         this.noTest = this.options['notest'];
+        this.noBuild = this.options['nobuild'];
 
         this.namespaces = this.tag.split('-');
 
@@ -170,6 +186,20 @@ var QuarkAppGenerator = class extends Generator {
             config.sort();
 
             this.fs.write(jsonPath, JSON.stringify(config, null, 4));
+        }
+
+        if (!this.noBuild) {
+            this.log('Adding to build output...');
+            jsonPath = this.destinationPath('gulp.conf.json');
+            content = this.fs.read(jsonPath);
+            config = JSON.parse(content);
+
+            config.include.push(this.modelReqPath);
+
+            ordered = this._sortArrayKeys(config);
+
+            this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+
         }
     }
 }

@@ -2,15 +2,21 @@
 var util = require('util');
 var path = require('path');
 var Generator = require('yeoman-generator');
-var welcome = require('yeoman-welcome');
 var chalk = require('chalk');
 var slugify = require('slugify');
 
 var QuarkAppGenerator = class extends Generator {
 
     initializing() {
-        this.log(welcome);
-        this.log(chalk.magenta('You\'re using the fantastic Quark app generator.'));
+        this.log(chalk.green("   ____                   _      _            "));
+        this.log(chalk.green("  / __ \\                 | |    (_)          "));
+        this.log(chalk.green(" | |  | |_   _  __ _ _ __| | __  _ ___        "));
+        this.log(chalk.green(" | |  | | | | |/ _` | '__| |/ / | / __|       "));
+        this.log(chalk.green(" | |__| | |_| | (_| | |  |   < _| \\__ \\     "));
+        this.log(chalk.green("  \\___\\_\\\\__,_|\\__,_|_|  |_|\\_(_) |___/ "));
+        this.log(chalk.green("                               _/ |           "));
+        this.log(chalk.green("                               |__/           "));
+        this.log(chalk.magenta('You\'re using the fantastic Quark APP generator!!!'));
     }
 
     prompting() {
