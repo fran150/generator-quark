@@ -7,36 +7,36 @@ var chalk = require('chalk');
 var slugify = require('slugify');
 var pascalCase = require('pascal-case');
 
-var QuarkComponentGenerator = class extends Generator {
+var QuarkScreenGenerator = class extends Generator {
 
     initializing() {
-        this.log(chalk.yellow("   ____                   _      _            "));
-        this.log(chalk.yellow("  / __ \\                 | |    (_)          "));
-        this.log(chalk.yellow(" | |  | |_   _  __ _ _ __| | __  _ ___        "));
-        this.log(chalk.yellow(" | |  | | | | |/ _` | '__| |/ / | / __|       "));
-        this.log(chalk.yellow(" | |__| | |_| | (_| | |  |   < _| \\__ \\     "));
-        this.log(chalk.yellow("  \\___\\_\\\\__,_|\\__,_|_|  |_|\\_(_) |___/ "));
-        this.log(chalk.yellow("                               _/ |           "));
-        this.log(chalk.yellow("                               |__/           "));
-        this.log(chalk.magenta('You\'re using the fantastic Quark COMPONENT generator!!!'));
+        this.log(chalk.blue("   ____                   _      _            "));
+        this.log(chalk.blue("  / __ \\                 | |    (_)          "));
+        this.log(chalk.blue(" | |  | |_   _  __ _ _ __| | __  _ ___        "));
+        this.log(chalk.blue(" | |  | | | | |/ _` | '__| |/ / | / __|       "));
+        this.log(chalk.blue(" | |__| | |_| | (_| | |  |   < _| \\__ \\     "));
+        this.log(chalk.blue("  \\___\\_\\\\__,_|\\__,_|_|  |_|\\_(_) |___/ "));
+        this.log(chalk.blue("                               _/ |           "));
+        this.log(chalk.blue("                               |__/           "));
+        this.log(chalk.magenta('You\'re using the fantastic Quark SCREEN generator!!!'));
 
         this.argument('tag', {
             required: true,
             type: String,
-            desc: 'Full Tag name of the new component'
+            desc: 'Full Tag name of the new screen'
         });
 
         this.option('notest', {
             required: false,
             type: Boolean,
-            desc: 'Must not generate test files for the component',
+            desc: 'Must not generate test files for the screen',
             default: false
         });
 
         this.option('nobuild', {
             required: false,
             type: Boolean,
-            desc: 'Must include the component on built files',
+            desc: 'Must include the screen on built files',
             default: false
         });
 
@@ -51,15 +51,15 @@ var QuarkComponentGenerator = class extends Generator {
         this.info.namespaces = this.info.tag.split('-');
 
         // Define base dir for require and file
-        this.info.componentsReqBase = 'components';
-        this.info.componentsFileBase = 'src/components';
+        this.info.componentsReqBase = 'screens';
+        this.info.componentsFileBase = 'src/screens';
 
-        // The component name is the last part of the namespace
+        // The screen name is the last part of the namespace
         var name = this.info.namespaces[this.info.namespaces.length - 1];
 
         // Get the model and view name module name
-        this.info.modelName = name + '.component';
-        this.info.viewName = name + '.component';
+        this.info.modelName = name + '.screen';
+        this.info.viewName = name + '.screen';
 
         // Get the model and view file name
         this.info.modelFileName = this.info.modelName + '.js';
@@ -88,7 +88,7 @@ var QuarkComponentGenerator = class extends Generator {
             return this.prompt([{
                 type    : 'confirm',
                 name    : 'tests',
-                message : 'Do you want to generate test files for this component?',
+                message : 'Do you want to generate test files for this screen?',
                 default : true
             }]).then(function (answers) {
                 this.info.tests = answers.tests;
@@ -140,7 +140,7 @@ var QuarkComponentGenerator = class extends Generator {
 
     writing() {
 
-        this.log('Generating component...');
+        this.log('Generating screen...');
         this.fs.copyTpl(
             this.templatePath('model.js'),
             this.destinationPath(this.info.modelPath),
@@ -152,9 +152,9 @@ var QuarkComponentGenerator = class extends Generator {
             this.info
         );
 
-        this.log('Registering component...');
+        this.log('Registering screen...');
         // Get the components JSON
-        var jsonPath = this.destinationPath('src/app/config/components/components.config.json');
+        var jsonPath = this.destinationPath('src/app/config/components/screens.config.json');
         var content = this.fs.read(jsonPath);
         var config = JSON.parse(content);
 
@@ -174,14 +174,14 @@ var QuarkComponentGenerator = class extends Generator {
 
             // Generate test spec
             this.fs.copyTpl(
-                this.templatePath('tests/specs/component.test.js'),
-                this.destinationPath('tests/specs/' + this.info.tag + '.test.js'),
+                this.templatePath('tests/specs/screen.test.js'),
+                this.destinationPath('tests/specs/' + this.info.tag + '.sc.test.js'),
                 this.info
             );
             // Generate view
             this.fs.copyTpl(
-                this.templatePath('tests/views/component.html'),
-                this.destinationPath('tests/views/' + this.info.tag + '.html'),
+                this.templatePath('tests/views/screen.html'),
+                this.destinationPath('tests/views/' + this.info.tag + '.sc.html'),
                 this.info
             );
 
@@ -194,7 +194,7 @@ var QuarkComponentGenerator = class extends Generator {
             config = JSON.parse(content);
 
             // If the spec name is not used
-            var specName = this.info.tag + '.test';
+            var specName = this.info.tag + '.sc.test';
             if (!config.includes(specName)) {
                 // Add the spec name, sort the array a
                 config.push(specName);
@@ -237,4 +237,4 @@ var QuarkComponentGenerator = class extends Generator {
     }
 }
 
-module.exports = QuarkComponentGenerator;
+module.exports = QuarkScreenGenerator;
