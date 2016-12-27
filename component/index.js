@@ -40,48 +40,61 @@ var QuarkAppGenerator = class extends Generator {
             default: false
         });
 
-        this.tag = this.options['tag'];
-        this.noTest = this.options['notest'];
-        this.noBuild = this.options['nobuild'];
+        this.info = {};
 
-        this.namespaces = this.tag.split('-');
+        // Get info from attributes
+        this.info.tag = this.options['tag'];
+        this.info.noTest = this.options['notest'];
+        this.info.noBuild = this.options['nobuild'];
 
-        this.componentsReqBase = 'components';
-        this.componentsFileBase = 'src/components';
+        // Get namespaces
+        this.info.namespaces = this.info.tag.split('-');
 
-        var name = this.namespaces[this.namespaces.length - 1];
+        // Define base dir for require and file
+        this.info.componentsReqBase = 'components';
+        this.info.componentsFileBase = 'src/components';
 
-        this.modelName = name + '.component';
-        this.viewName = name + '.component';
+        // The component name is the last part of the namespace
+        var name = this.info.namespaces[this.info.namespaces.length - 1];
 
-        this.modelFileName = this.modelName + '.js';
-        this.viewFileName = this.viewName + '.html';
+        // Get the model and view name module name
+        this.info.modelName = name + '.component';
+        this.info.viewName = name + '.component';
 
-        var folders = this.namespaces.slice();
+        // Get the model and view file name
+        this.info.modelFileName = this.info.modelName + '.js';
+        this.info.viewFileName = this.info.viewName + '.html';
+
+        // Clone namespaces array
+        var folders = this.info.namespaces.slice();
         folders.pop();
         var folder = folders.join('/');
 
-        this.modelPath = this.componentsFileBase + '/' + folder + '/' + this.modelFileName;
-        this.viewPath = this.componentsFileBase + '/' + folder + '/' + this.viewFileName;
+        // Get the file path of the model and view
+        this.info.modelPath = this.info.componentsFileBase + '/' + folder + '/' + this.info.modelFileName;
+        this.info.viewPath = this.info.componentsFileBase + '/' + folder + '/' + this.info.viewFileName;
 
-        this.modelReqPath = this.componentsReqBase + '/' + folder + '/' + this.modelName;
-        this.viewReqPath = this.componentsReqBase + '/' + folder + '/' + this.viewName;
+        // Get the require path for model and view
+        this.info.modelReqPath = this.info.componentsReqBase + '/' + folder + '/' + this.info.modelName;
+        this.info.viewReqPath = this.info.componentsReqBase + '/' + folder + '/' + this.info.viewName;
 
-        this.className = pascalCase(this.tag);
+        // Get the class name from tag
+        this.info.className = pascalCase(this.info.tag);
     }
 
     prompting() {
-        if (!this.noTest) {
+        // If the noTest flag is NOT applied prompt for tests
+        if (!this.info.noTest) {
             return this.prompt([{
                 type    : 'confirm',
                 name    : 'tests',
                 message : 'Do you want to generate test files for this component?',
                 default : true
             }]).then(function (answers) {
-                this.tests = answers.tests;
+                this.info.tests = answers.tests;
             }.bind(this));
         } else {
-            this.tests = false;
+            this.info.tests = false;
         }
     }
 
@@ -95,11 +108,11 @@ var QuarkAppGenerator = class extends Generator {
         if (namespaces.length > 0) {
             this._addNamespace(config[name], namespaces);
         } else {
-            config[name] = this.modelReqPath;
+            config[name] = this.info.modelReqPath;
         }
     }
 
-    _sortArrayKeys(data) {
+    _sortObjectKeys(data) {
         var keys = new Array();
 
         for (var key in data) {
@@ -115,7 +128,7 @@ var QuarkAppGenerator = class extends Generator {
             var item = data[key];
 
             if (item !== null && typeof item === 'object' && !(item instanceof Array)) {
-                result[key] = this._sortArrayKeys(item);
+                result[key] = this._sortObjectKeys(item);
             } else {
                 result[key] = item;
             }
@@ -126,80 +139,100 @@ var QuarkAppGenerator = class extends Generator {
 
 
     writing() {
-        var info = {
-            tag: this.tag,
-            namespaces: this.namespaces,
-            modelFileName: this.modelFileName,
-            viewFileName: this.viewFileName,
-            modelPath: this.modelPath,
-            viewPath: this.viewPath,
-            modelReqPath: this.modelReqPath,
-            viewReqPath: this.viewReqPath,
-            className: this.className
-        }
 
         this.log('Generating component...');
         this.fs.copyTpl(
             this.templatePath('model.js'),
-            this.destinationPath(this.modelPath),
-            info
+            this.destinationPath(this.info.modelPath),
+            this.info
         );
         this.fs.copyTpl(
             this.templatePath('view.html'),
-            this.destinationPath(this.viewPath),
-            info
+            this.destinationPath(this.info.viewPath),
+            this.info
         );
 
         this.log('Registering component...');
+        // Get the components JSON
         var jsonPath = this.destinationPath('src/app/config/components/components.config.json');
         var content = this.fs.read(jsonPath);
         var config = JSON.parse(content);
 
-        // Clone the array
-        var namespaces = this.namespaces.slice();
+        // Clone the namespaces array
+        var namespaces = this.info.namespaces.slice();
         this._addNamespace(config, namespaces);
 
-        var ordered = this._sortArrayKeys(config);
+        // Sort the objects keys
+        var ordered = this._sortObjectKeys(config);
 
+        // Rewrite JSON file
         this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
 
-        if (this.tests) {
+        // If Tests are be enabled
+        if (this.info.tests) {
             this.log('Generating tests...');
+
+            // Generate test spec
             this.fs.copyTpl(
                 this.templatePath('tests/specs/component.test.js'),
-                this.destinationPath('tests/specs/' + this.tag + '.test.js'),
-                info
+                this.destinationPath('tests/specs/' + this.info.tag + '.test.js'),
+                this.info
             );
+            // Generate view
             this.fs.copyTpl(
                 this.templatePath('tests/views/component.html'),
-                this.destinationPath('tests/views/' + this.tag + '.html'),
-                info
+                this.destinationPath('tests/views/' + this.info.tag + '.html'),
+                this.info
             );
 
+
             this.log('Registering test...');
+
+            // Read the specs config
             jsonPath = this.destinationPath('tests/app/config/specs.config.json');
             content = this.fs.read(jsonPath);
             config = JSON.parse(content);
 
-            config.push(this.tag + '.test');
+            // If the spec name is not used
+            var specName = this.info.tag + '.test';
+            if (!config.includes(specName)) {
+                // Add the spec name, sort the array a
+                config.push(specName);
 
-            config.sort();
+                config.sort();
 
-            this.fs.write(jsonPath, JSON.stringify(config, null, 4));
+                this.fs.write(jsonPath, JSON.stringify(config, null, 4));
+            }
         }
 
-        if (!this.noBuild) {
+        // ifnthe nobuild option is NOT specified
+        if (!this.info.noBuild) {
+            // Read the build config
             this.log('Adding to build output...');
             jsonPath = this.destinationPath('gulp.conf.json');
-            content = this.fs.read(jsonPath);
+            content = this.fs.read(jsonPath);//
             config = JSON.parse(content);
 
-            config.include.push(this.modelReqPath);
+            var exists = config.include.includes(this.info.modelReqPath);
 
-            ordered = this._sortArrayKeys(config);
+            if (!exists) {
+                for (var name in config.bundles) {
+                    var bundle = config.bundles[name];
 
-            this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+                    if (bundle.includes(this.info.modelReqPath)) {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
 
+            if (!exists) {
+                config.include.push(this.info.modelReqPath);
+
+                ordered = this._sortObjectKeys(config);
+
+                this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+            }
         }
     }
 }
