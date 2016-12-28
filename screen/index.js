@@ -50,6 +50,17 @@ var QuarkScreenGenerator = class extends Generator {
         // Get namespaces
         this.info.namespaces = this.info.tag.split('-');
 
+        if (this.info.namespaces[0].toLowerCase() == 'screens' || this.info.namespaces[0].toLowerCase() == 'screen') {
+            throw new Error('Do not add the screen prefix to screens components. This generator will add it for you.');
+        }
+
+        // Add screen to namespaces
+        this.info.namespaces.unshift('screens');
+
+        this.info.tag = this.info.namespaces.join('-');
+
+        console.log(this.info.namespaces);
+
         // Define base dir for require and file
         this.info.componentsReqBase = 'screens';
         this.info.componentsFileBase = 'src/screens';
@@ -67,16 +78,25 @@ var QuarkScreenGenerator = class extends Generator {
 
         // Clone namespaces array
         var folders = this.info.namespaces.slice();
+
+        // Remove the screen namespaces and the component name
+        folders.shift();
         folders.pop();
+
+        // Generate the folder name
         var folder = folders.join('/');
 
+        if (folders != '') {
+            folder = '/' + folder;
+        }
+
         // Get the file path of the model and view
-        this.info.modelPath = this.info.componentsFileBase + '/' + folder + '/' + this.info.modelFileName;
-        this.info.viewPath = this.info.componentsFileBase + '/' + folder + '/' + this.info.viewFileName;
+        this.info.modelPath = this.info.componentsFileBase + folder + '/' + this.info.modelFileName;
+        this.info.viewPath = this.info.componentsFileBase + folder + '/' + this.info.viewFileName;
 
         // Get the require path for model and view
-        this.info.modelReqPath = this.info.componentsReqBase + '/' + folder + '/' + this.info.modelName;
-        this.info.viewReqPath = this.info.componentsReqBase + '/' + folder + '/' + this.info.viewName;
+        this.info.modelReqPath = this.info.componentsReqBase + folder + '/' + this.info.modelName;
+        this.info.viewReqPath = this.info.componentsReqBase + folder + '/' + this.info.viewName;
 
         // Get the class name from tag
         this.info.className = pascalCase(this.info.tag);
@@ -175,13 +195,13 @@ var QuarkScreenGenerator = class extends Generator {
             // Generate test spec
             this.fs.copyTpl(
                 this.templatePath('tests/specs/screen.test.js'),
-                this.destinationPath('tests/specs/' + this.info.tag + '.sc.test.js'),
+                this.destinationPath('tests/specs/' + this.info.tag + '.test.js'),
                 this.info
             );
             // Generate view
             this.fs.copyTpl(
                 this.templatePath('tests/views/screen.html'),
-                this.destinationPath('tests/views/' + this.info.tag + '.sc.html'),
+                this.destinationPath('tests/views/' + this.info.tag + '.html'),
                 this.info
             );
 
@@ -194,7 +214,7 @@ var QuarkScreenGenerator = class extends Generator {
             config = JSON.parse(content);
 
             // If the spec name is not used
-            var specName = this.info.tag + '.sc.test';
+            var specName = this.info.tag + '.test';
             if (!config.includes(specName)) {
                 // Add the spec name, sort the array a
                 config.push(specName);
@@ -229,9 +249,9 @@ var QuarkScreenGenerator = class extends Generator {
             if (!exists) {
                 config.include.push(this.info.modelReqPath);
 
-                ordered = this._sortObjectKeys(config);
+                config.include = config.include.sort();
 
-                this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+                this.fs.write(jsonPath, JSON.stringify(config, null, 4));
             }
         }
     }

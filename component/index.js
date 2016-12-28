@@ -70,13 +70,17 @@ var QuarkComponentGenerator = class extends Generator {
         folders.pop();
         var folder = folders.join('/');
 
+        if (folders != '') {
+            folder = '/' + folder;
+        }
+
         // Get the file path of the model and view
-        this.info.modelPath = this.info.componentsFileBase + '/' + folder + '/' + this.info.modelFileName;
-        this.info.viewPath = this.info.componentsFileBase + '/' + folder + '/' + this.info.viewFileName;
+        this.info.modelPath = this.info.componentsFileBase + folder + '/' + this.info.modelFileName;
+        this.info.viewPath = this.info.componentsFileBase + folder + '/' + this.info.viewFileName;
 
         // Get the require path for model and view
-        this.info.modelReqPath = this.info.componentsReqBase + '/' + folder + '/' + this.info.modelName;
-        this.info.viewReqPath = this.info.componentsReqBase + '/' + folder + '/' + this.info.viewName;
+        this.info.modelReqPath = this.info.componentsReqBase + folder + '/' + this.info.modelName;
+        this.info.viewReqPath = this.info.componentsReqBase + folder + '/' + this.info.viewName;
 
         // Get the class name from tag
         this.info.className = pascalCase(this.info.tag);
@@ -229,9 +233,9 @@ var QuarkComponentGenerator = class extends Generator {
             if (!exists) {
                 config.include.push(this.info.modelReqPath);
 
-                ordered = this._sortObjectKeys(config);
+                config.include = config.include.sort();
 
-                this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+                this.fs.write(jsonPath, JSON.stringify(config, null, 4));
             }
         }
     }
