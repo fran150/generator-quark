@@ -83,7 +83,7 @@ var QuarkComponentGenerator = class extends Generator {
         this.info.viewReqPath = this.info.componentsReqBase + folder + '/' + this.info.viewName;
 
         // Get the class name from tag
-        this.info.className = pascalCase(this.info.tag);
+        this.info.className = pascalCase(this.info.tag) + 'Component';
     }
 
     prompting() {

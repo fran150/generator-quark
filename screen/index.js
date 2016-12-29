@@ -59,8 +59,6 @@ var QuarkScreenGenerator = class extends Generator {
 
         this.info.tag = this.info.namespaces.join('-');
 
-        console.log(this.info.namespaces);
-
         // Define base dir for require and file
         this.info.componentsReqBase = 'screens';
         this.info.componentsFileBase = 'src/screens';
@@ -99,7 +97,7 @@ var QuarkScreenGenerator = class extends Generator {
         this.info.viewReqPath = this.info.componentsReqBase + folder + '/' + this.info.viewName;
 
         // Get the class name from tag
-        this.info.className = pascalCase(this.info.tag);
+        this.info.className = pascalCase(this.options['tag']) + 'Screen';
     }
 
     prompting() {

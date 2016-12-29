@@ -13,7 +13,7 @@ define(['quark', 'knockout', 'quark-testing-helper'], function($$, ko, Helper) {
         it('must contain the correct message', function() {
             var model = helper.models.<%- className %>;
 
-            expect(model.message).toBe("Welcome to <%= tag %> screen");
+            expect(model.title).toBe("Welcome to <%= tag %> screen");
         });
     });
 });
