@@ -1,7 +1,15 @@
-define(['quark', 'knockout', 'quark-testing-helper'], function($$, ko, Helper) {
+<%
+    var tagName;
+
+    if (isModule) {
+        tagName = prefix ? prefix + '-' + tag : tag;
+    } else {
+        tagName = tag;
+    }
+%>define(['quark', 'knockout', 'quark-testing-helper'], function($$, ko, Helper) {
     var helper = new Helper({});
 
-    describe('<%- tag %> Tests', function() {
+    describe('<%- tagName %> Tests', function() {
         beforeAll(function(done) {
             helper.load('<%- tag %>', done);
         })

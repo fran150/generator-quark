@@ -119,15 +119,25 @@ var QuarkScreenGenerator = class extends Generator {
     _addNamespace(config, namespaces) {
         var name = namespaces.shift();
 
-        if (!config[name]) {
-            config[name] = {};
+        if (namespaces.length > 0) {
+            config[name] = this._addNamespace(config[name], namespaces);
+        } else {
+            // If the current namespace is an object add a new property
+            if (config !== null && typeof config === 'object' && !(config instanceof Array)) {
+                config[name] = this.info.modelReqPath;
+            } else {
+                // If not, move the config to an empty value and add the new property
+                var temp = config;
+
+                config = {
+                    "": temp
+                };
+
+                config[name] = this.info.modelReqPath;
+            }
         }
 
-        if (namespaces.length > 0) {
-            this._addNamespace(config[name], namespaces);
-        } else {
-            config[name] = this.info.modelReqPath;
-        }
+        return config;
     }
 
     _sortObjectKeys(data) {
@@ -178,7 +188,7 @@ var QuarkScreenGenerator = class extends Generator {
 
         // Clone the namespaces array
         var namespaces = this.info.namespaces.slice();
-        this._addNamespace(config, namespaces);
+        config = this._addNamespace(config, namespaces);
 
         // Sort the objects keys
         var ordered = this._sortObjectKeys(config);

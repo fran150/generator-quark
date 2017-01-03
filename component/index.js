@@ -84,6 +84,11 @@ var QuarkComponentGenerator = class extends Generator {
 
         // Get the class name from tag
         this.info.className = pascalCase(this.info.tag) + 'Component';
+
+        var moduleMain = this.destinationPath('src/main.js');
+        var moduleConfig = this.destinationPath('src/main.json');
+
+        this.info.isModule = this.fs.exists(moduleMain) && this.fs.exists(moduleConfig);
     }
 
     prompting() {
@@ -105,15 +110,25 @@ var QuarkComponentGenerator = class extends Generator {
     _addNamespace(config, namespaces) {
         var name = namespaces.shift();
 
-        if (!config[name]) {
-            config[name] = {};
+        if (namespaces.length > 0) {
+            config[name] = this._addNamespace(config[name], namespaces);
+        } else {
+            // If the current namespace is an object add a new property
+            if (config !== null && typeof config === 'object' && !(config instanceof Array)) {
+                config[name] = this.info.modelReqPath;
+            } else {
+                // If not, move the config to an empty value and add the new property
+                var temp = config;
+
+                config = {
+                    "": temp
+                };
+
+                config[name] = this.info.modelReqPath;
+            }
         }
 
-        if (namespaces.length > 0) {
-            this._addNamespace(config[name], namespaces);
-        } else {
-            config[name] = this.info.modelReqPath;
-        }
+        return config;
     }
 
     _sortObjectKeys(data) {
@@ -144,6 +159,10 @@ var QuarkComponentGenerator = class extends Generator {
 
     writing() {
 
+        if (this.info.isModule) {
+            this.log(chalk.red('Running in a Module...'));
+        }
+
         this.log('Generating component...');
         this.fs.copyTpl(
             this.templatePath('model.js'),
@@ -157,14 +176,31 @@ var QuarkComponentGenerator = class extends Generator {
         );
 
         this.log('Registering component...');
+
         // Get the components JSON
-        var jsonPath = this.destinationPath('src/app/config/components/components.config.json');
+        var jsonPath;
+        if (this.info.isModule) {
+            jsonPath = this.destinationPath('src/main.json');
+        } else {
+            jsonPath = this.destinationPath('src/app/config/components/components.config.json');
+        }
+
         var content = this.fs.read(jsonPath);
         var config = JSON.parse(content);
 
+        // If this is a module set the prefix
+        if (this.info.isModule) {
+            this.info.prefix = config.prefix;
+        }
+
         // Clone the namespaces array
         var namespaces = this.info.namespaces.slice();
-        this._addNamespace(config, namespaces);
+
+        if (this.info.isModule) {
+            config.namespaces = this._addNamespace(config.namespaces, namespaces);
+        } else {
+            config = this._addNamespace(config, namespaces);
+        }
 
         // Sort the objects keys
         var ordered = this._sortObjectKeys(config);

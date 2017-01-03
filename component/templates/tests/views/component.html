@@ -1,2 +1,10 @@
-<<%- tag %> data-bind="import: '<%- className %>'">
-</<%- tag %>>
+<%
+    var tagName;
+
+    if (isModule) {
+        tagName = prefix ? prefix + '-' + tag : tag;
+    } else {
+        tagName = tag;
+    }
+%><<%- tagName %> data-bind="import: '<%- className %>'">
+</<%- tagName %>>
