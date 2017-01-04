@@ -1,6 +1,6 @@
 {
-  "name": "<%- shortName %>",
-  "version": "<%- version %>"
+  "name": "<%- longName %>",
+  "version": "<%- version %>",
   "authors": [
 <% for (let i = 0; i < authors.length; i++) {
     %>    "<%- authors[i] %>"<%
@@ -12,7 +12,10 @@
 %>
   ],
   "description": "<%- description %>",
-  "main": "index.html",
+  "main": "dist/main.js",
+  "moduleType": [
+    "amd"
+  ],
   "keywords": [
 <% for (let i = 0; i < keywords.length; i++) {
     %>    "<%- keywords[i] %>"<%
@@ -24,20 +27,13 @@
 %>
   ],
   "license": "<%- license %>",
-  "homepage": "<%- homepage %>",
-  "private": true,
   "ignore": [
-    "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_modules"
   ],
   "dependencies": {
-    "font-awesome": "^4.7.0",
     "quark": "~0.9.0",
-    "requirejs-plugins": "^1.0.3",
-    "qk-alchemy": "~0.5.0"
+    "requirejs-plugins": "^1.0.3"
   },
   "devDependencies": {
     "jasmine-core": "jasmine#^2.5.2"

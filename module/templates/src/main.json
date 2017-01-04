@@ -1,0 +1,6 @@
+{
+    "css": [],
+    "namespaces": {},
+    "prefix": "<%- prefix %>",
+    "version": "<%- version %>"
+}
