@@ -5,7 +5,7 @@ var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var slugify = require('slugify');
 
-var QuarkAppGenerator = class extends Generator {
+var QuarkModuleGenerator = class extends Generator {
 
     initializing() {
         this.log(chalk.red("   ____                   _      _            "));
@@ -124,4 +124,4 @@ var QuarkAppGenerator = class extends Generator {
     }
 }
 
-module.exports = QuarkAppGenerator;
+module.exports = QuarkModuleGenerator;
