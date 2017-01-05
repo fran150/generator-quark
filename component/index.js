@@ -160,7 +160,7 @@ var QuarkComponentGenerator = class extends Generator {
     writing() {
 
         if (this.info.isModule) {
-            this.log(chalk.red('Running in a Module...'));
+            this.log(chalk.red.bold('Running in a Module...'));
         }
 
         this.log('Generating component...');

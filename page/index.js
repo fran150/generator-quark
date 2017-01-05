@@ -21,18 +21,24 @@ var QuarkPageGenerator = class extends Generator {
         this.log(chalk.magenta('You\'re using the fantastic Quark PAGE generator!!!'));
 
         this.info = {};
+
+        var moduleMain = this.destinationPath('src/main.js');
+        var moduleConfig = this.destinationPath('src/main.json');
+
+        this.info.isModule = this.fs.exists(moduleMain) && this.fs.exists(moduleConfig);
+
     }
 
     _promptParams(params, index, max) {
         return this.prompt([{
             type    : 'input',
             name    : 'name',
-            message : (index + 1) + ' - Enter the parameter name:'
+            message : 'Parameter ' + (index + 1) + ' - Enter the parameter name:'
         },
         {
             type    : 'input',
             name    : 'value',
-            message : (index + 1) + ' - Enter the parameter default value:'
+            message : 'Parameter ' + (index + 1) + ' - Enter the parameter default value:'
         }]).then(function (answers) {
             params[index] = {
                 name: answers.name,
@@ -110,12 +116,12 @@ var QuarkPageGenerator = class extends Generator {
         return this.prompt([{
             type    : 'input',
             name    : 'name',
-            message : (index + 1) + ' - Enter the outlet name:'
+            message : 'Outlet ' + (index + 1) + ' - Enter the outlet name:'
         },
         {
             type    : 'input',
             name    : 'component',
-            message : (index + 1) + ' - Enter the component name:'
+            message : 'Outlet ' + (index + 1) + ' - Enter the component name:'
         }]).then(function (answers) {
             outlet[index] = {
                 name: answers.name,
@@ -182,17 +188,53 @@ var QuarkPageGenerator = class extends Generator {
 
 
     writing() {
-        console.log(this.info);
-        /*
+        if (this.info.isModule) {
+            this.log(chalk.red.bold('Running in a Module...'));
+        }
+
         this.log('Registering Page...');
-        // Get the components JSON
-        var jsonPath = this.destinationPath('src/app/config/components/screens.config.json');
+
+        // Get the routes JSON
+        var jsonPath;
+        if (this.info.isModule) {
+            jsonPath = this.destinationPath('src/main.json');
+        } else {
+            jsonPath = this.destinationPath('src/app/config/routing/pages.config.json');
+        }
+
         var content = this.fs.read(jsonPath);
         var config = JSON.parse(content);
 
-        // Clone the namespaces array
-        var namespaces = this.info.namespaces.slice();
-        config = this._addNamespace(config, namespaces);
+        // If there is no config for the page then create one
+        if (this.info.isModule) {
+            if (!config.pages) {
+                config.pages = {};
+            }
+
+            if (!config.pages[this.info.page]) {
+                config.pages[this.info.page] = {};
+            }
+        } else {
+            if (!config[this.info.page]) {
+                config[this.info.page] = {};
+            }
+        }
+
+        // Get the page config
+        var page;
+
+        if (this.info.isModule) {
+            page = config.pages[this.info.page];
+        } else {
+            page = config[this.info.page];
+        }
+
+
+        // Create outlets in the page
+        for (var i = 0; i < this.info.outlets; i++) {
+            var outlet = this.info.outletData[i];
+            page[outlet.name] = outlet.component;
+        }
 
         // Sort the objects keys
         var ordered = this._sortObjectKeys(config);
@@ -200,72 +242,121 @@ var QuarkPageGenerator = class extends Generator {
         // Rewrite JSON file
         this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
 
-        // If Tests are be enabled
-        if (this.info.tests) {
-            this.log('Generating tests...');
+        console.log('Creating controllers...');
 
-            // Generate test spec
-            this.fs.copyTpl(
-                this.templatePath('tests/specs/screen.test.js'),
-                this.destinationPath('tests/specs/' + this.info.tag + '.test.js'),
-                this.info
-            );
-            // Generate view
-            this.fs.copyTpl(
-                this.templatePath('tests/views/screen.html'),
-                this.destinationPath('tests/views/' + this.info.tag + '.html'),
-                this.info
-            );
+        var controllers = this.info.page.split('/');
 
+        var fullName = '';
+        for (var i = 0; i < controllers.length; i++) {
+            var name = controllers[i];
 
-            this.log('Registering test...');
+            if (fullName != '') {
+                fullName += '/' + name;
+            } else {
+                fullName = name;
+            }
 
-            // Read the specs config
-            jsonPath = this.destinationPath('tests/app/config/specs.config.json');
-            content = this.fs.read(jsonPath);
-            config = JSON.parse(content);
+            var path = fullName + '.controller.js';
+            var fullPath = 'src/controllers/' + path;
+            var className = pascalCase(fullName) + 'Controller';
+            var outlet = this.info.outletData;
 
-            // If the spec name is not used
-            var specName = this.info.tag + '.test';
-            if (!config.includes(specName)) {
-                // Add the spec name, sort the array a
-                config.push(specName);
+            var data = {
+                name: name,
+                fullName: fullName,
+                path: path,
+                fullPath: fullPath,
+                className: className,
+                outlet: outlet
+            };
 
-                config.sort();
+            console.log(data);
 
-                this.fs.write(jsonPath, JSON.stringify(config, null, 4));
+            if (!this.fs.exists(this.destinationPath(data.fullPath))) {
+                this.fs.copyTpl(
+                    this.templatePath('controller.js'),
+                    this.destinationPath(data.fullPath),
+                    data
+                );
             }
         }
 
-        // ifnthe nobuild option is NOT specified
-        if (!this.info.noBuild) {
-            // Read the build config
-            this.log('Adding to build output...');
-            jsonPath = this.destinationPath('gulp.conf.json');
-            content = this.fs.read(jsonPath);//
+        if (this.info.addRoute) {
+            this.log('Registering Route...');
+
+            // Get the routes JSON
+            if (this.info.isModule) {
+                jsonPath = this.destinationPath('src/main.json');
+            } else {
+                jsonPath = this.destinationPath('src/app/config/routing/routes.config.json');
+            }
+
+            content = this.fs.read(jsonPath);
             config = JSON.parse(content);
 
-            var exists = config.include.includes(this.info.modelReqPath);
+            if (this.info.isModule) {
+                if (!config.routes) {
+                    config.routes = {};
+                }
 
-            if (!exists) {
-                for (var name in config.bundles) {
-                    var bundle = config.bundles[name];
+                config.routes[this.info.page] = this.info.route;
+            } else {
+                config[this.info.page] = this.info.route;
+            }
 
-                    if (bundle.includes(this.info.modelReqPath)) {
-                        exists = true;
-                        break;
-                    }
+            // Sort the objects keys
+            var ordered = this._sortObjectKeys(config);
+
+            // Rewrite JSON file
+            this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+        }
+
+        if (this.info.addParams) {
+            this.log('Registering Page Parameters...');
+
+            // Get the params JSON
+            if (this.info.isModule) {
+                jsonPath = this.destinationPath('src/main.json');
+            } else {
+                jsonPath = this.destinationPath('src/app/config/routing/params.config.json');
+            }
+
+            content = this.fs.read(jsonPath);
+            config = JSON.parse(content);
+
+            if (this.info.isModule) {
+                if (!config.params) {
+                    config.params = {};
+                }
+
+                config.params[this.info.page] = {};
+            } else {
+                // If there is no config for the page then create one
+                if (!config[this.info.page]) {
+                    config[this.info.page] = {};
                 }
             }
 
-            if (!exists) {
-                config.include.push(this.info.modelReqPath);
-
-                config.include = config.include.sort();
-
-                this.fs.write(jsonPath, JSON.stringify(config, null, 4));
+            // Get the params config
+            var params;
+            if (this.info.isModule) {
+                params = config.params[this.info.page];
+            } else {
+                params = config[this.info.page];
             }
-        }*/
+
+            // Create outlets in the page
+            for (var i = 0; i < this.info.paramsCount; i++) {
+                var param = this.info.params[i];
+                params[param.name] = param.value;
+            }
+
+            // Sort the objects keys
+            var ordered = this._sortObjectKeys(config);
+
+            // Rewrite JSON file
+            this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
+        }
     }
 }
 

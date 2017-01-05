@@ -51,7 +51,7 @@ var QuarkScreenGenerator = class extends Generator {
         this.info.namespaces = this.info.tag.split('-');
 
         if (this.info.namespaces[0].toLowerCase() == 'screens' || this.info.namespaces[0].toLowerCase() == 'screen') {
-            throw new Error('Do not add the screen prefix to screens components. This generator will add it for you.');
+            this.env.error(chalk.red.bold('Do not add the screen prefix to screens components. This generator will add it for you.'));
         }
 
         // Add screen to namespaces
@@ -98,6 +98,15 @@ var QuarkScreenGenerator = class extends Generator {
 
         // Get the class name from tag
         this.info.className = pascalCase(this.options['tag']) + 'Screen';
+
+        var moduleMain = this.destinationPath('src/main.js');
+        var moduleConfig = this.destinationPath('src/main.json');
+
+        this.info.isModule = this.fs.exists(moduleMain) && this.fs.exists(moduleConfig);
+
+        if (this.info.isModule) {
+             this.env.error(chalk.red.bold('Screen components are not diferentiated from normal components in modules, please use the component generator'));
+        }
     }
 
     prompting() {
