@@ -242,7 +242,7 @@ var QuarkPageGenerator = class extends Generator {
         // Rewrite JSON file
         this.fs.write(jsonPath, JSON.stringify(ordered, null, 4));
 
-        console.log('Creating controllers...');
+        this.log('Creating controllers...');
 
         var controllers = this.info.page.split('/');
 
@@ -269,8 +269,6 @@ var QuarkPageGenerator = class extends Generator {
                 className: className,
                 outlet: outlet
             };
-
-            console.log(data);
 
             if (!this.fs.exists(this.destinationPath(data.fullPath))) {
                 this.fs.copyTpl(
