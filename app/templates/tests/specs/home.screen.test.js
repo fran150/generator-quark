@@ -13,7 +13,7 @@ define(['quark', 'knockout', 'quark-testing-helper'], function($$, ko, Helper) {
         it('must contain the correct title and description', function() {
             var home = helper.models.home;
 
-            expect(home.name).toBe("Welcome to <%- name %> application");
+            expect(home.name).toBe("Welcome to <%- longName %> application");
             expect(home.description).toBe("<%- description %>");
         });
     });

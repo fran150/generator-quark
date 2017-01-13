@@ -7,7 +7,7 @@ define([
     function HomeScreen(params, $scope, $imports) {
         var self = this;
 
-        this.name = "Welcome to <%- name %> application";
+        this.name = "Welcome to <%- longName %> application";
         this.description = "<%- description %>";
     }
 

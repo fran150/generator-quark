@@ -1,6 +1,6 @@
 {
-  "name": "<%- shortName %>",
-  "version": "<%- version %>"
+  "name": "<%- slugName %>",
+  "version": "<%- version %>",
   "authors": [
 <% for (let i = 0; i < authors.length; i++) {
     %>    "<%- authors[i] %>"<%
