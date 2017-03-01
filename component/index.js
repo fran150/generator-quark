@@ -111,6 +111,10 @@ var QuarkComponentGenerator = class extends Generator {
         var name = namespaces.shift();
 
         if (namespaces.length > 0) {
+            if (!config[name]) {
+                config[name] = {};
+            }
+
             config[name] = this._addNamespace(config[name], namespaces);
         } else {
             // If the current namespace is an object add a new property
