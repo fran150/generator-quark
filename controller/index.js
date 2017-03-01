@@ -2,7 +2,6 @@
 var util = require('util');
 var path = require('path');
 var Generator = require('yeoman-generator');
-var welcome = require('yeoman-welcome');
 var chalk = require('chalk');
 var slugify = require('slugify');
 var pascalCase = require('pascal-case');
