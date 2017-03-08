@@ -5,7 +5,7 @@ require = requireConfigure(QuarkRequireConf('bower_modules', true), {
     paths: {
         'testing-views': 'tests/views',
         'json': 'bower_modules/requirejs-plugins/src/json',
-        'qk-<%- slugName %>': './src'
+        '<%- slugName %>': './src'
     },
     shim: {
         "bootstrap/js": {

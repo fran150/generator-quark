@@ -1,4 +1,4 @@
-define(['quark', 'jasmine-boot', 'qk-<%- slugName %>/main'], function($$, jazmine, main) {
+define(['quark', 'jasmine-boot', '<%- slugName %>/main'], function($$, jazmine, main) {
     // Reference your test modules here
     require(['json!./tests/app/config/specs.config.json'], function(testModules) {
 

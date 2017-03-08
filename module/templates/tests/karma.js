@@ -11,7 +11,7 @@ requirejs.config({
     baseUrl: '/base',
     deps: tests,
     callback: function() {
-        require(['quark', 'qk-<%- slugName %>/main'], function($$) {
+        require(['quark', '<%- slugName %>/main'], function($$) {
             $$.start();
             window.__karma__.start();
         });
