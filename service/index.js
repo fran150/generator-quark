@@ -137,7 +137,7 @@ var QuarkServiceGenerator = class extends Generator {
                 json.require.config.services = {}
             }
 
-            json.require.config.services[this.info.serviceName] = this.info.bower.name + "/" + this.info.path;
+            json.require.config.services[this.info.serviceName] = this.info.bower.name + "/services/" + this.info.path;
 
             // Sort the objects keys
             var ordered = this._sortObjectKeys(json);

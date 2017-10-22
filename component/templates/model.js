@@ -4,7 +4,7 @@ define([
     'text!./<%- viewFileName %>'
 ], function($$, ko, template) {
 
-    function <%- className %>(params, $scope, $imports) {
+    function <%- className %>(params, $scope, $imports, $context) {
         var self = this;
 
         this.message = "This is a <%= tag %> component";
